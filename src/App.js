@@ -1,16 +1,29 @@
-import './App.css';
-import { Routes, Router } from 'react-router-dom'
-import Client from './layout/Client';
-import Admin from './layout/Admin';
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import Admin from "./layout/Admin";
+import Client from "./layout/Client";
+import Laptop from "./screens/admin/laptop/laptop";
+import AddPhone from "./screens/admin/phone/add";
+import EditPhone from "./screens/admin/phone/edit";
+import Phone from "./screens/admin/phone/phone";
+import Sound from "./screens/admin/sound/sound";
+import Tablet from "./screens/admin/tablet/tablet";
+import User from "./screens/admin/user/user";
 
 function App() {
   return (
     <Routes>
-      <Router path="/" element={<Client/>}>
-      </Router>
+      <Route path="/" element={<Client />}></Route>
 
-      <Router path="admin" element={<Admin />}>
-      </Router>
+      <Route path="admin" element={<Admin />}>
+        <Route path="phone" element={<Phone />} />
+        <Route path="phone-edit/:id" element={<EditPhone />} />
+        <Route path="phone-add" element={<AddPhone />} />
+        <Route path="laptop" element={<Laptop />} />
+        <Route path="tablet" element={<Tablet />} />
+        <Route path="sound" element={<Sound />} />
+        <Route path="user" element={<User />} />
+      </Route>
     </Routes>
   );
 }
