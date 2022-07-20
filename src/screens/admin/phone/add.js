@@ -149,7 +149,7 @@ const AddPhone = (props) => {
             >
               <Select defaultValue="lucy">
                 <Option value="lucy" disabled>
-                  Chọn tác giả
+                  Chọn danh mục
                 </Option>
                 <Option value="laptop">Laptop</Option>
                 <Option value="Phone">phone</Option>
