@@ -9,11 +9,14 @@ import Phone from "./screens/admin/phone/phone";
 import Sound from "./screens/admin/sound/sound";
 import Tablet from "./screens/admin/tablet/tablet";
 import User from "./screens/admin/user/user";
+import HomePage from "./screens/website/home/homePage";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Client />}></Route>
+      <Route path="/" element={<Client />}>
+        <Route path="/" element={<HomePage />}/>
+      </Route>
 
       <Route path="admin" element={<Admin />}>
         <Route path="phone" element={<Phone />} />

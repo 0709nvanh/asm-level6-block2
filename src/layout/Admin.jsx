@@ -47,12 +47,12 @@ const items2 = dataMenu.map((data) => {
 
 const App = () => (
   <Layout>
-    <Header className="header bg-header">
+    <Header className="header bg-header" >
       <Row className="align-items-center">
         <Col span={4}>
           <div className="logo">
             <img
-              className="w-100"
+              width={100}
               src="https://logos-world.net/wp-content/uploads/2022/04/Gartic-Phone-Logo.png"
               alt=""
             />
@@ -79,7 +79,7 @@ const App = () => (
         </Col>
       </Row>
     </Header>
-    <Layout>
+    <Layout style={{marginTop: '80px'}}>
       <Sider width={300} className="site-layout-background">
         <Menu
           mode="inline"

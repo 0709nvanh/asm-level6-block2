@@ -81,7 +81,9 @@
 .align-items-center{
   align-items: center;
 }
-
+.text-decorate{
+  text-decoration: line-through;
+}
 .m-0{
   margin: 0 !important;
 }
@@ -102,6 +104,18 @@
 
 .justify-content-between{
   justify-content: space-between;
+}
+
+.mb-1{
+  margin-bottom: 10px;
+}
+
+.pe-1{
+  padding-right: 1rem;
+}
+
+.pe-2{
+  padding-right: 2rem;
 }
 
 .text-white{

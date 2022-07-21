@@ -1,81 +1,112 @@
-import { Col, Row, Select, Space, Switch, Table, Tag, Typography } from "antd";
-import React from "react";
+import { Col, message, Row, Select, Space, Switch, Table, Tag, Typography } from "antd";
+import React, { useEffect, useState } from "react";
 import { PlusCircleOutlined, FormOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { formatprice } from "../../../common/formatprice";
+import productAPI from "../../../api/product";
 const { Title } = Typography;
 const { Option } = Select;
 
 const data = [
   {
-    key: '1',
-    name: 'John Brown',
+    key: "1",
+    name: "John Brown",
     price: 3223131213,
-    des: 'New York No. 1 Lake Park',
+    des: "New York No. 1 Lake Park",
     status: false,
   },
   {
-    key: '2',
-    name: 'Jim Green',
+    key: "2",
+    name: "Jim Green",
     price: 231213321,
-    des: 'London No. 1 Lake Park',
+    des: "London No. 1 Lake Park",
     status: true,
   },
   {
-    key: '3',
-    name: 'Joe Black',
+    key: "3",
+    name: "Joe Black",
     price: 213213213,
-    des: 'Sidney No. 1 Lake Park',
+    des: "Sidney No. 1 Lake Park",
     status: false,
   },
 ];
 const Phone = (props) => {
+  const [products, setProducts] = useState([]);
+  const getData = async () => {
+    const { data: productList } = await productAPI.getList({ time: -1 });
+    setProducts(productList);
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
-  const onChange = (checked) => {
-    console.log(`switch to ${checked}`);
+
+  const updateStatus = async (product) => {
+    const dataNew = { ...product, status: !product.status };
+    const { data: productUpdate } = await productAPI.update(dataNew);
+    if (productUpdate) {
+      message.success("Thay đổi trạng thái thành công!")
+      getData();
+    }
+  };
+
+  const onChange = (data) => {
+    if (
+      window.confirm("Bạn có chắc chắn muốn đổi trạng thái sản phẩm không?")
+    ) {
+      updateStatus(data);
+    }
   };
   const columns = [
     {
-      title: 'STT',
-      dataIndex: 'key',
-      key: 'key',
-      render: (text, index) => text,
+      title: "STT",
+      dataIndex: "_id",
+      key: "_id",
+      render: (text, data, number) => number + 1,
     },
     {
-      title: 'Tên sản phẩm',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Tên sản phẩm",
+      dataIndex: "title",
+      key: "title",
       render: (text) => <a>{text}</a>,
     },
     {
-      title: 'Thành tiền',
-      dataIndex: 'price',
-      key: 'price',
-      render: (price) => <span className="m-0">{formatprice(price)}</span>
+      title: "Giá cũ",
+      dataIndex: "priceOld",
+      key: "priceOld",
+      render: (price) => <span className="m-0">{formatprice(price)}</span>,
     },
     {
-      title: 'Mô tả',
-      dataIndex: 'des',
-      key: 'des',
+      title: "Giá mới",
+      dataIndex: "priceNew",
+      key: "priceNew",
+      render: (price) => <span className="m-0">{formatprice(price)}</span>,
     },
     {
-      title: 'Ẩn hiện',
-      key: 'status',
-      dataIndex: 'status',
-      render: (item) => (
+      title: "Mô tả",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Ẩn hiện",
+      key: "status",
+      dataIndex: "status",
+      render: (item, data) => (
         <>
-          <Switch checked={item} onChange={onChange} />
+          <Switch checked={item} onChange={() => onChange(data)} />
         </>
       ),
     },
     {
-      title: 'Thao tác',
-      key: 'action',
-      dataIndex: 'path',
+      title: "Thao tác",
+      key: "action",
+      dataIndex: "path",
       render: (item, key) => (
-        <Link to={"/admin/phone-edit/" + key.key}><FormOutlined style={{ fontSize: "30px", color: "#08c" }} /></Link>
+        <Link to={"/admin/phone-edit/" + key.key}>
+          <FormOutlined style={{ fontSize: "30px", color: "#08c" }} />
+        </Link>
       ),
     },
   ];
@@ -101,7 +132,7 @@ const Phone = (props) => {
         <Col span={6}>
           <Select
             defaultValue="laptop"
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
             onChange={handleChange}
           >
             <Option value="laptop">Laptop</Option>
@@ -113,7 +144,7 @@ const Phone = (props) => {
           </Select>
         </Col>
       </Row>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={products} />
     </>
   );
 };
