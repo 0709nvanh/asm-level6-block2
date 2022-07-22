@@ -1,3 +1,4 @@
+import { PlusOutlined } from "@ant-design/icons";
 import {
   Button,
   Col,
@@ -8,20 +9,14 @@ import {
   Row,
   Select,
   Typography,
+  Upload,
 } from "antd";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-} from "firebase/storage";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import categoryAPI from "../../../api/category";
+import { uploadIMG } from "../../../api/image";
 import productAPI from "../../../api/product";
 import "../../../common/firebase";
-import UploadImage from "../../../common/uploadImage";
 const { Option } = Select;
 const { Title } = Typography;
 const getBase64 = (file) =>
@@ -37,11 +32,8 @@ const AddPhone = (props) => {
   const [imageFile, setImageFile] = useState([]);
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
-
-  const uploadImageState = useCallback((image) => {
-    setImageFile(image);
-  }, []);
-
+  const handleChange = ({ fileList: newFileList }) => setImageFile(newFileList);
+ 
   const getCategory = async () => {
     const { data } = await categoryAPI.getList();
     setCategories(data);
@@ -51,30 +43,30 @@ const AddPhone = (props) => {
   }, []);
 
   const onFinish = async (values) => {
-    const storage = getStorage();
-    const uploadImagePromise = (image) => {
-      return new Promise(function (resolve, reject) {
-        const storageRef = ref(storage, `images/${image.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, image);
-        uploadBytes(storageRef, image).then(async () => {
-          const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-          resolve(downloadUrl);
-        });
-      });
-    };
-    const listImageUrl = [];
-    for (let i = 0; i < imageFile.length; i++) {
-      await uploadImagePromise(imageFile[i].originFileObj).then((response) => {
-        listImageUrl.push(response);
-      });
-    }
-    values.images = listImageUrl;
-    const { data } = await productAPI.create(values);
-    if (data) {
-      navigate("/admin/phone");
-      message.success("Thêm mới thành công");
+    const dataImg = await getBase64(imageFile[0].originFileObj);
+    const { data: img } = await uploadIMG(dataImg);
+    if (img && img.url) {
+      values.image = img.url;
+      const { data } = await productAPI.create(values);
+      if (data) {
+        navigate("/admin/phone");
+        message.success("Thêm mới thành công");
+      }
     }
   };
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -152,7 +144,13 @@ const AddPhone = (props) => {
               </Select>
             </Form.Item>
             <Form.Item label="Ảnh sản phẩm" name="images">
-              <UploadImage imageData={""} uploadImageState={uploadImageState} />
+              <Upload
+                listType="picture-card"
+                fileList={imageFile}
+                onChange={handleChange}
+              >
+                {imageFile.length >= 1 ? null : uploadButton}
+              </Upload>
             </Form.Item>
             <Form.Item label="Đặc điểm nổi bật" name="description">
               <Input.TextArea />

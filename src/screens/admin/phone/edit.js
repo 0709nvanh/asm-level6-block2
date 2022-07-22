@@ -1,4 +1,3 @@
-import React, { useCallback, useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -13,18 +12,21 @@ import {
   Typography,
   Upload,
 } from "antd";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-} from "firebase/storage";
-import "../../../common/firebase";
-import UploadImage from "../../../common/uploadImage";
-import productAPI from "../../../api/product";
 import categoryAPI from "../../../api/category";
+import { uploadIMG } from "../../../api/image";
+import productAPI from "../../../api/product";
+import "../../../common/firebase";
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = () => resolve(reader.result);
+
+    reader.onerror = (error) => reject(error);
+  });
 const { Option } = Select;
 const { Title } = Typography;
 const EditPhone = (props) => {
@@ -33,11 +35,7 @@ const EditPhone = (props) => {
   const [imageFile, setImageFile] = useState([]);
   const [phone, setPhone] = useState({});
   const [categories, setCategories] = useState([]);
-  const navigate = useNavigate()
-  const uploadImageState = useCallback((image) => {
-    setImageFile(image);
-  }, []);
-
+  const navigate = useNavigate();
   const getDataProduct = async () => {
     const { data } = await productAPI.read(slug);
     if (data) {
@@ -45,6 +43,8 @@ const EditPhone = (props) => {
       setPhone(data);
     }
   };
+
+  const handleChange = ({ fileList: newFileList }) => setImageFile(newFileList);
 
   const getCategory = async () => {
     const { data } = await categoryAPI.getList();
@@ -57,35 +57,42 @@ const EditPhone = (props) => {
   }, [slug]);
 
   const onFinish = async (values) => {
-    const storage = getStorage();
-    const uploadImagePromise = (image) => {
-      return new Promise(function (resolve, reject) {
-        const storageRef = ref(storage, `images/${image.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, image);
-        uploadBytes(storageRef, image).then(async () => {
-          const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-          resolve(downloadUrl);
-        });
-      });
-    };
-    const listImageUrl = [];
-    for (let i = 0; i < imageFile.length; i++) {
-      await uploadImagePromise(imageFile[i].originFileObj).then((response) => {
-        listImageUrl.push(response);
-      });
-    }
-    values.slug = slug
-    values.images = listImageUrl.length > 0 ? listImageUrl : phone.images;
-    const {data} = await productAPI.update(values);
-    if(data){
-      navigate('/admin/phone')
-      message.success("Cập nhật thành công")
+    let dataimgAll = null;
+    if(imageFile.length > 0){
+      dataimgAll = imageFile;
+      const dataImg = await getBase64(dataimgAll[0].originFileObj);
+      const { data: img } = await uploadIMG(dataImg);
+      if(img && img.url){
+        values.image = img.url;
+        values.slug = slug;
+        const { data } = await productAPI.update(values);
+        if (data) {
+          navigate("/admin/phone");
+          message.success("Cập nhật thành công");
+        }
+      }
+    }else{
+      values.slug = slug;
+      const { data } = await productAPI.update(values);
+      if (data) {
+        navigate("/admin/phone");
+        message.success("Cập nhật thành công");
+      }
     }
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>
+  );
   return (
     <>
       {loading ? (
@@ -165,11 +172,35 @@ const EditPhone = (props) => {
                       ))}
                   </Select>
                 </Form.Item>
-                <Form.Item label="Ảnh sản phẩm" name="images">
-                  <UploadImage
-                    imageData={phone.images}
-                    uploadImageState={uploadImageState}
-                  />
+                <Form.Item label="Ảnh sản phẩm" name="image">
+                  <div
+                    className="d-flex"
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    {phone.image && (
+                      <img
+                        style={{ marginRight: "10px" }}
+                        key={phone.image}
+                        src={phone.image}
+                        alt=""
+                        width="80"
+                      />
+                    )}
+                    {phone.image && (
+                      <img
+                        width="80"
+                        src="https://cdn.pixabay.com/photo/2012/04/05/01/58/arrow-25864_640.png"
+                        alt=""
+                      />
+                    )}
+                    <Upload
+                      listType="picture-card"
+                      fileList={imageFile}
+                      onChange={handleChange}
+                    >
+                      {imageFile.length >= 1 ? null : uploadButton}
+                    </Upload>
+                  </div>
                 </Form.Item>
                 <Form.Item label="Đặc điểm nổi bật" name="description">
                   <Input.TextArea defaultValue={phone.description} />
