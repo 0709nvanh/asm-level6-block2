@@ -6,7 +6,7 @@ const categoryAPI = {
     return axiosClient.post(url, data);
   },
   getList(data) {
-    const url = `/categorys?${stringify(data)}`;
+    const url = `/categories?${stringify(data)}`;
     return axiosClient.get(url);
   },
   update(data){

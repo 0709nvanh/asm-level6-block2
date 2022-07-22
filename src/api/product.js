@@ -5,6 +5,10 @@ const productAPI = {
     const url = `/product`;
     return axiosClient.post(url, data);
   },
+  read(slug) {
+    const url = `/product/${slug}`;
+    return axiosClient.get(url);
+  },
   getList(data) {
     const url = `/products?${stringify(data)}`;
     return axiosClient.get(url);

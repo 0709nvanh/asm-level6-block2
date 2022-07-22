@@ -1,9 +1,20 @@
-import { Col, message, Row, Select, Space, Switch, Table, Tag, Typography } from "antd";
+import {
+  Col,
+  message,
+  Row,
+  Select,
+  Space,
+  Switch,
+  Table,
+  Tag,
+  Typography,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { PlusCircleOutlined, FormOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { formatprice } from "../../../common/formatprice";
 import productAPI from "../../../api/product";
+import categoryAPI from "../../../api/category";
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -32,22 +43,31 @@ const data = [
 ];
 const Phone = (props) => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const getData = async () => {
     const { data: productList } = await productAPI.getList({ time: -1 });
     setProducts(productList);
   };
+  const getCategory = async () => {
+    const { data } = await categoryAPI.getList();
+    setCategories(data);
+  };
   useEffect(() => {
     getData();
+    getCategory();
   }, []);
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
+  const handleChange = async (value) => {
+    const { data } = await productAPI.getList({ cateId: value });
+    if(data){
+      setProducts(data)
+    }
   };
 
   const updateStatus = async (product) => {
     const dataNew = { ...product, status: !product.status };
     const { data: productUpdate } = await productAPI.update(dataNew);
     if (productUpdate) {
-      message.success("Thay đổi trạng thái thành công!")
+      message.success("Thay đổi trạng thái thành công!");
       getData();
     }
   };
@@ -71,6 +91,12 @@ const Phone = (props) => {
       dataIndex: "title",
       key: "title",
       render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Danh mục",
+      dataIndex: "category",
+      key: "category",
+      render: (category) => <a>{category.name}</a>,
     },
     {
       title: "Giá cũ",
@@ -104,7 +130,7 @@ const Phone = (props) => {
       key: "action",
       dataIndex: "path",
       render: (item, key) => (
-        <Link to={"/admin/phone-edit/" + key.key}>
+        <Link to={"/admin/phone-edit/" + key.slug}>
           <FormOutlined style={{ fontSize: "30px", color: "#08c" }} />
         </Link>
       ),
@@ -131,16 +157,18 @@ const Phone = (props) => {
         </Col>
         <Col span={6}>
           <Select
-            defaultValue="laptop"
+            defaultValue="lucy"
             style={{ width: "100%" }}
             onChange={handleChange}
           >
-            <Option value="laptop">Laptop</Option>
-            <Option value="lucy">Lucy</Option>
-            <Option value="disabled" disabled>
-              Disabled
+            <Option value="lucy" disabled>
+              Chọn danh mục
             </Option>
-            <Option value="Yiminghe">yiminghe</Option>
+            {categories &&
+              categories.length > 0 &&
+              categories?.map((category) => (
+                <Option value={category._id}>{category.name}</Option>
+              ))}
           </Select>
         </Col>
       </Row>

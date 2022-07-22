@@ -20,7 +20,7 @@ function App() {
 
       <Route path="admin" element={<Admin />}>
         <Route path="phone" element={<Phone />} />
-        <Route path="phone-edit/:id" element={<EditPhone />} />
+        <Route path="phone-edit/:slug" element={<EditPhone />} />
         <Route path="phone-add" element={<AddPhone />} />
         <Route path="laptop" element={<Laptop />} />
         <Route path="tablet" element={<Tablet />} />

@@ -1,17 +1,14 @@
-import React, { useCallback, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
 import {
   Button,
   Col,
   Form,
   Input,
   InputNumber,
+  message,
   Row,
   Select,
   Typography,
-  Upload,
 } from "antd";
-import {Link} from 'react-router-dom'
 import {
   getDownloadURL,
   getStorage,
@@ -19,6 +16,10 @@ import {
   uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
+import React, { useCallback, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import categoryAPI from "../../../api/category";
+import productAPI from "../../../api/product";
 import "../../../common/firebase";
 import UploadImage from "../../../common/uploadImage";
 const { Option } = Select;
@@ -33,31 +34,22 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 const AddPhone = (props) => {
-  const [fileList, setFileList] = useState([]);
   const [imageFile, setImageFile] = useState([]);
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-  };
+  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
+
   const uploadImageState = useCallback((image) => {
     setImageFile(image);
   }, []);
 
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const getCategory = async () => {
+    const { data } = await categoryAPI.getList();
+    setCategories(data);
+  };
+  useEffect(() => {
+    getCategory();
+  }, []);
 
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
-    </div>
-  );
   const onFinish = async (values) => {
     const storage = getStorage();
     const uploadImagePromise = (image) => {
@@ -76,17 +68,18 @@ const AddPhone = (props) => {
         listImageUrl.push(response);
       });
     }
-    values.image = listImageUrl;
-    console.log("Success:", values);
+    values.images = listImageUrl;
+    const { data } = await productAPI.create(values);
+    if (data) {
+      navigate("/admin/phone");
+      message.success("Thêm mới thành công");
+    }
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
   return (
     <>
       <Row className="align-items-center justify-content-between mb-2">
-        <Col span={4}>
+        <Col>
           <Title level={3}>Thêm mới sản phẩm</Title>
         </Col>
       </Row>
@@ -106,7 +99,7 @@ const AddPhone = (props) => {
           >
             <Form.Item
               label="Tên sản phẩm"
-              name="name"
+              name="title"
               rules={[
                 {
                   required: true,
@@ -118,7 +111,7 @@ const AddPhone = (props) => {
             </Form.Item>
             <Form.Item
               label="Giá gốc"
-              name="price-old"
+              name="priceOld"
               rules={[
                 {
                   required: true,
@@ -130,7 +123,7 @@ const AddPhone = (props) => {
             </Form.Item>
             <Form.Item
               label="Giá khuyến mãi"
-              name="price-sale"
+              name="priceNew"
               rules={[
                 {
                   required: true,
@@ -151,20 +144,23 @@ const AddPhone = (props) => {
                 <Option value="lucy" disabled>
                   Chọn danh mục
                 </Option>
-                <Option value="laptop">Laptop</Option>
-                <Option value="Phone">phone</Option>
+                {categories &&
+                  categories.length > 0 &&
+                  categories?.map((category) => (
+                    <Option value={category._id}>{category.name}</Option>
+                  ))}
               </Select>
             </Form.Item>
-            <Form.Item label="Ảnh sản phẩm" name="image">
+            <Form.Item label="Ảnh sản phẩm" name="images">
               <UploadImage imageData={""} uploadImageState={uploadImageState} />
             </Form.Item>
-            <Form.Item label="Đặc điểm nổi bật" name="des">
+            <Form.Item label="Đặc điểm nổi bật" name="description">
               <Input.TextArea />
             </Form.Item>
-            <Form.Item label="Mô tả dài" name="des-maxlength">
+            <Form.Item label="Mô tả dài" name="desc">
               <Input.TextArea />
             </Form.Item>
-            <Form.Item label="Mô tả ngắn" name="des-minlength">
+            <Form.Item label="Mô tả ngắn" name="shortDesc">
               <Input.TextArea />
             </Form.Item>
             <Form.Item

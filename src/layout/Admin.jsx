@@ -48,9 +48,9 @@ const items2 = dataMenu.map((data) => {
 const App = () => (
   <Layout>
     <Header className="header bg-header" >
-      <Row className="align-items-center">
+      <Row className="">
         <Col span={4}>
-          <div className="logo">
+          <div className="">
             <img
               width={100}
               src="https://logos-world.net/wp-content/uploads/2022/04/Gartic-Phone-Logo.png"

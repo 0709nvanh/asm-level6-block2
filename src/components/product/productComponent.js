@@ -14,18 +14,18 @@ const ProductComponent = (props) => {
             marginBottom: "10px",
             borderRadius: 8,
           }}
-          cover={<img alt="example" src={product.image} />}
+          cover={<img style={{height: '280px', objectFit: 'cover', padding: 10}} alt="example" src={product.images[0]} />}
         >
           <Meta title={product.title} description={product.description} />
           <div className="d-flex align-items-center justify-content-between">
             <Typography.Title
               className="m-0"
-              style={{ color: "red" }}
+              style={{ color: "red", fontSize: 14 }}
               level={5}
             >
               {formatprice(product.priceNew)}
             </Typography.Title>
-            <Typography.Title className="m-0 text-decorate" level={5}>
+            <Typography.Title style={{ fontSize: 12 }} className="m-0 text-decorate" level={5}>
               {formatprice(product.priceOld)}
             </Typography.Title>
           </div>
