@@ -9,6 +9,10 @@ const categoryAPI = {
     const url = `/categories?${stringify(data)}`;
     return axiosClient.get(url);
   },
+  read(slug) {
+    const url = `/category/${slug}`;
+    return axiosClient.get(url);
+  },
   update(data){
     const url = `/category/${data.slug}`;
     return axiosClient.put(url, data);

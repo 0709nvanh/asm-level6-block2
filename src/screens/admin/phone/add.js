@@ -12,11 +12,14 @@ import {
   Upload,
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import categoryAPI from "../../../api/category";
 import { uploadIMG } from "../../../api/image";
 import productAPI from "../../../api/product";
 import "../../../common/firebase";
+import { getCategories } from "../../../features/categorySlide";
+import { createProduct } from "../../../features/productSlide";
 const { Option } = Select;
 const { Title } = Typography;
 const getBase64 = (file) =>
@@ -30,13 +33,13 @@ const getBase64 = (file) =>
   });
 const AddPhone = (props) => {
   const [imageFile, setImageFile] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const { categories } = useSelector((state) => state.categories);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleChange = ({ fileList: newFileList }) => setImageFile(newFileList);
- 
+
   const getCategory = async () => {
-    const { data } = await categoryAPI.getList();
-    setCategories(data);
+    dispatch(getCategories());
   };
   useEffect(() => {
     getCategory();
@@ -47,11 +50,14 @@ const AddPhone = (props) => {
     const { data: img } = await uploadIMG(dataImg);
     if (img && img.url) {
       values.image = img.url;
-      const { data } = await productAPI.create(values);
-      if (data) {
-        navigate("/admin/phone");
-        message.success("Thêm mới thành công");
-      }
+      dispatch(createProduct(values)).then((res) => {
+        if (res.payload) {
+          navigate("/admin/phone");
+          message.success("Thêm mới sản phẩm thành công");
+        } else {
+          message.error("Thêm mới sản phẩm thất bại");
+        }
+      });
     }
   };
 
@@ -139,11 +145,13 @@ const AddPhone = (props) => {
                 {categories &&
                   categories.length > 0 &&
                   categories?.map((category) => (
-                    <Option value={category._id}>{category.name}</Option>
+                    <Option key={category._id} value={category._id}>
+                      {category.name}
+                    </Option>
                   ))}
               </Select>
             </Form.Item>
-            <Form.Item label="Ảnh sản phẩm" name="images">
+            <Form.Item label="Ảnh sản phẩm" name="image">
               <Upload
                 listType="picture-card"
                 fileList={imageFile}

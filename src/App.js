@@ -9,6 +9,8 @@ import Phone from "./screens/admin/phone/phone";
 import Sound from "./screens/admin/sound/sound";
 import Tablet from "./screens/admin/tablet/tablet";
 import User from "./screens/admin/user/user";
+import Login from "./screens/website/auth/login";
+import Signup from "./screens/website/auth/signup";
 import HomePage from "./screens/website/home/homePage";
 
 function App() {
@@ -17,7 +19,8 @@ function App() {
       <Route path="/" element={<Client />}>
         <Route path="/" element={<HomePage />}/>
       </Route>
-
+      <Route path="login" element={<Login />} />
+      <Route path="signup" element={<Signup />} />
       <Route path="admin" element={<Admin />}>
         <Route path="phone" element={<Phone />} />
         <Route path="phone-edit/:slug" element={<EditPhone />} />

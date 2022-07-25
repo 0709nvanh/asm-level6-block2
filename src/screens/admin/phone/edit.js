@@ -12,12 +12,14 @@ import {
   Typography,
   Upload,
 } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import categoryAPI from "../../../api/category";
 import { uploadIMG } from "../../../api/image";
 import productAPI from "../../../api/product";
 import "../../../common/firebase";
+import { getCategories } from "../../../features/categorySlide";
+import { readProduct, updateProduct } from "../../../features/productSlide";
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -31,53 +33,46 @@ const { Option } = Select;
 const { Title } = Typography;
 const EditPhone = (props) => {
   const { slug } = useParams();
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { product, loading } = useSelector((state) => state.products);
+  const { categories } = useSelector((state) => state.categories);
   const [imageFile, setImageFile] = useState([]);
-  const [phone, setPhone] = useState({});
-  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
-  const getDataProduct = async () => {
-    const { data } = await productAPI.read(slug);
-    if (data) {
-      setLoading(false);
-      setPhone(data);
-    }
-  };
 
   const handleChange = ({ fileList: newFileList }) => setImageFile(newFileList);
-
-  const getCategory = async () => {
-    const { data } = await categoryAPI.getList();
-    setCategories(data);
-  };
-
   useEffect(() => {
-    getDataProduct();
-    getCategory();
+    dispatch(readProduct(slug));
+    dispatch(getCategories());
   }, [slug]);
 
   const onFinish = async (values) => {
     let dataimgAll = null;
-    if(imageFile.length > 0){
+    if (imageFile.length > 0) {
       dataimgAll = imageFile;
       const dataImg = await getBase64(dataimgAll[0].originFileObj);
       const { data: img } = await uploadIMG(dataImg);
-      if(img && img.url){
+      if (img && img.url) {
         values.image = img.url;
         values.slug = slug;
-        const { data } = await productAPI.update(values);
-        if (data) {
+        dispatch(updateProduct(values)).then((res) => {
+          if (res.payload) {
+            navigate("/admin/phone");
+            message.success("Cập nhật thành công");
+          } else {
+            message.error("Cập nhật thất bại");
+          }
+        });
+      }
+    } else {
+      values.slug = slug;
+      dispatch(updateProduct(values)).then((res) => {
+        if (res.payload) {
           navigate("/admin/phone");
           message.success("Cập nhật thành công");
+        } else {
+          message.error("Cập nhật thất bại");
         }
-      }
-    }else{
-      values.slug = slug;
-      const { data } = await productAPI.update(values);
-      if (data) {
-        navigate("/admin/phone");
-        message.success("Cập nhật thành công");
-      }
+      });
     }
   };
 
@@ -114,7 +109,7 @@ const EditPhone = (props) => {
                 wrapperCol={{
                   span: 16,
                 }}
-                initialValues={phone}
+                initialValues={product}
                 name="dynamic_form_nest_item"
                 onFinish={onFinish}
               >
@@ -128,7 +123,7 @@ const EditPhone = (props) => {
                     },
                   ]}
                 >
-                  <Input defaultValue={phone.title} />
+                  <Input defaultValue={product?.title} />
                 </Form.Item>
                 <Form.Item
                   label="Giá gốc"
@@ -140,7 +135,7 @@ const EditPhone = (props) => {
                     },
                   ]}
                 >
-                  <InputNumber value={phone.priceOld} />
+                  <InputNumber value={product?.priceOld} />
                 </Form.Item>
                 <Form.Item
                   label="Giá khuyến mãi"
@@ -152,7 +147,7 @@ const EditPhone = (props) => {
                     },
                   ]}
                 >
-                  <InputNumber value={phone.priceNew} />
+                  <InputNumber value={product?.priceNew} />
                 </Form.Item>
                 <Form.Item
                   label="Danh mục sản phẩm"
@@ -164,11 +159,13 @@ const EditPhone = (props) => {
                     },
                   ]}
                 >
-                  <Select defaultValue={phone.category}>
+                  <Select defaultValue={product?.category}>
                     {categories &&
                       categories.length > 0 &&
                       categories?.map((category) => (
-                        <Option value={category._id}>{category.name}</Option>
+                        <Option key={category._id} value={category._id}>
+                          {category.name}
+                        </Option>
                       ))}
                   </Select>
                 </Form.Item>
@@ -177,16 +174,16 @@ const EditPhone = (props) => {
                     className="d-flex"
                     style={{ display: "flex", alignItems: "center" }}
                   >
-                    {phone.image && (
+                    {product.image && (
                       <img
                         style={{ marginRight: "10px" }}
-                        key={phone.image}
-                        src={phone.image}
+                        key={product.image}
+                        src={product.image}
                         alt=""
                         width="80"
                       />
                     )}
-                    {phone.image && (
+                    {product.image && (
                       <img
                         width="80"
                         src="https://cdn.pixabay.com/photo/2012/04/05/01/58/arrow-25864_640.png"
@@ -203,13 +200,13 @@ const EditPhone = (props) => {
                   </div>
                 </Form.Item>
                 <Form.Item label="Đặc điểm nổi bật" name="description">
-                  <Input.TextArea defaultValue={phone.description} />
+                  <Input.TextArea defaultValue={product?.description} />
                 </Form.Item>
                 <Form.Item label="Mô tả dài" name="desc">
-                  <Input.TextArea defaultValue={phone.desc} />
+                  <Input.TextArea defaultValue={product?.desc} />
                 </Form.Item>
                 <Form.Item label="Mô tả ngắn" name="shortDesc">
-                  <Input.TextArea defaultValue={phone.shortDesc} />
+                  <Input.TextArea defaultValue={product?.shortDesc} />
                 </Form.Item>
                 <Form.Item
                   wrapperCol={{

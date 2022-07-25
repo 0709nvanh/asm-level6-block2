@@ -1,66 +1,37 @@
+import { FormOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import {
   Col,
   message,
   Row,
-  Select,
-  Space,
-  Switch,
-  Table,
-  Tag,
-  Typography,
+  Select, Switch,
+  Table, Typography
 } from "antd";
-import React, { useEffect, useState } from "react";
-import { PlusCircleOutlined, FormOutlined } from "@ant-design/icons";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { formatprice } from "../../../common/formatprice";
 import productAPI from "../../../api/product";
-import categoryAPI from "../../../api/category";
+import { formatprice } from "../../../common/formatprice";
+import { getCategories } from "../../../features/categorySlide";
+import { getProducts } from "../../../features/productSlide";
 const { Title } = Typography;
 const { Option } = Select;
-
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    price: 3223131213,
-    des: "New York No. 1 Lake Park",
-    status: false,
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    price: 231213321,
-    des: "London No. 1 Lake Park",
-    status: true,
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    price: 213213213,
-    des: "Sidney No. 1 Lake Park",
-    status: false,
-  },
-];
 const Phone = (props) => {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const dispatch = useDispatch();
+  const { categories } = useSelector((state) => state.categories);
+  const { products } = useSelector((state) => state.products);
+
   const getData = async () => {
-    const { data: productList } = await productAPI.getList({ time: -1 });
-    setProducts(productList);
+    dispatch(getProducts({ time: -1 }));
   };
   const getCategory = async () => {
-    const { data } = await categoryAPI.getList();
-    setCategories(data);
+    dispatch(getCategories())
   };
   useEffect(() => {
     getData();
     getCategory();
   }, []);
   const handleChange = async (value) => {
-    const { data } = await productAPI.getList({ cateId: value });
-    if(data){
-      setProducts(data)
-    }
+    dispatch(getProducts({ cateId: value }));
   };
 
   const updateStatus = async (product) => {
@@ -167,7 +138,7 @@ const Phone = (props) => {
             {categories &&
               categories.length > 0 &&
               categories?.map((category) => (
-                <Option value={category._id}>{category.name}</Option>
+                <Option key={category._id} value={category._id}>{category.name}</Option>
               ))}
           </Select>
         </Col>

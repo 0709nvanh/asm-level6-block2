@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { Col, Row, Typography } from "antd";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ProductComponent from "../../../components/product/productComponent";
-import productAPI from "../../../api/product";
+import { getProducts } from "../../../features/productSlide";
 
 const ProductNew = (props) => {
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const { products } = useSelector((state) => state.products);
   const getData = async () => {
-    const { data } = await productAPI.getList({ time: -1 });
-    setProducts(data)
+    dispatch(getProducts({ time: -1, limit: 8, status: true }));
   };
   useEffect(() => {
     getData();

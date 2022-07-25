@@ -14,7 +14,7 @@ const ProductComponent = (props) => {
             marginBottom: "10px",
             borderRadius: 8,
           }}
-          cover={<img style={{height: '280px', objectFit: 'cover', padding: 10}} alt="example" src={product.images[0]} />}
+          cover={<img style={{height: '280px', objectFit: 'cover', padding: 10}} alt="example" src={product.image} />}
         >
           <Meta title={product.title} description={product.description} />
           <div className="d-flex align-items-center justify-content-between">
