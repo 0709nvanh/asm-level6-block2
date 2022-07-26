@@ -33,11 +33,20 @@ export const updateCategory = createAsyncThunk(
   }
 );
 
+export const updateStatusCategory = createAsyncThunk(
+  "categories/updateStatusCategory",
+  async (category) => {
+    const { data } = await categoryAPI.updateStatus(category);
+    return data;
+  }
+);
+
 const categorySlice = createSlice({
   name: "categories",
   initialState: {
     categories: [],
     category: {},
+    products: [],
     loading: false,
     error: {},
   },
@@ -55,7 +64,8 @@ const categorySlice = createSlice({
 
     builder.addCase(readCategory.fulfilled, (state, action) => {
       state.loading = false;
-      state.category = action.payload;
+      state.category = action.payload.category;
+      state.products = action.payload.products;
     });
     builder.addCase(readCategory.pending, (state) => {
       state.loading = true;
@@ -81,6 +91,17 @@ const categorySlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateCategory.rejected, (state, action) => {
+      state.error = action.payload;
+    });
+
+    builder.addCase(updateStatusCategory.fulfilled, (state, action) => {
+      state.loading = false;
+      state.category = action.payload;
+    });
+    builder.addCase(updateStatusCategory.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateStatusCategory.rejected, (state, action) => {
       state.error = action.payload;
     });
   },

@@ -5,6 +5,7 @@ import {
   SearchOutlined,
   FileSearchOutlined,
   SoundOutlined,
+  WindowsOutlined
 } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, Row, Col, Input, Image, Avatar } from "antd";
 import React from "react";
@@ -15,6 +16,11 @@ const dataMenu = [
     title: "User",
     icon: UserOutlined,
     path: "user",
+  },
+  {
+    title: "Danh mục",
+    icon: WindowsOutlined,
+    path: "category",
   },
   {
     title: "Điện thoại",

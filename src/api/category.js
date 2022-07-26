@@ -16,6 +16,10 @@ const categoryAPI = {
   update(data){
     const url = `/category/${data.slug}`;
     return axiosClient.put(url, data);
+  },
+  updateStatus(data){
+    const url = `/category/update-status/${data._id}`;
+    return axiosClient.put(url, data);
   }
 };
 export default categoryAPI;

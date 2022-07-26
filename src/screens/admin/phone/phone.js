@@ -1,11 +1,5 @@
 import { FormOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import {
-  Col,
-  message,
-  Row,
-  Select, Switch,
-  Table, Typography
-} from "antd";
+import { Col, message, Row, Select, Switch, Table, Typography } from "antd";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -24,7 +18,7 @@ const Phone = (props) => {
     dispatch(getProducts({ time: -1 }));
   };
   const getCategory = async () => {
-    dispatch(getCategories())
+    dispatch(getCategories());
   };
   useEffect(() => {
     getData();
@@ -35,12 +29,24 @@ const Phone = (props) => {
   };
 
   const updateStatus = async (product) => {
-    const dataNew = { ...product, status: !product.status };
-    const { data: productUpdate } = await productAPI.update(dataNew);
-    if (productUpdate) {
-      message.success("Thay đổi trạng thái thành công!");
-      getData();
-    }
+    const dataNew = {
+      _id: product._id,
+      status: !product.status,
+      category: product.category._id,
+    };
+    productAPI
+      .updateStatus(dataNew)
+      .then((res) => {
+        if (res) {
+          message.success("Thay đổi trạng thái thành công!");
+          getData();
+        }
+      })
+      .catch((err) => {
+        if(err?.response?.data?.message){
+          message.error(err?.response?.data?.message);
+        }
+      });
   };
 
   const onChange = (data) => {
@@ -138,7 +144,9 @@ const Phone = (props) => {
             {categories &&
               categories.length > 0 &&
               categories?.map((category) => (
-                <Option key={category._id} value={category._id}>{category.name}</Option>
+                <Option key={category._id} value={category._id}>
+                  {category.name}
+                </Option>
               ))}
           </Select>
         </Col>

@@ -16,6 +16,10 @@ const productAPI = {
   update(data){
     const url = `/product/${data.slug}`;
     return axiosClient.put(url, data);
+  },
+  updateStatus(data){
+    const url = `/product-update-status/${data._id}`;
+    return axiosClient.put(url, data);
   }
 };
 export default productAPI;

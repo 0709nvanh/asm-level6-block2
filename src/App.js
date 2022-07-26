@@ -2,6 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Admin from "./layout/Admin";
 import Client from "./layout/Client";
+import CategoryAdd from "./screens/admin/category/cateAdd";
+import CategoryEdit from "./screens/admin/category/cateEdit";
+import Category from "./screens/admin/category/category";
 import Laptop from "./screens/admin/laptop/laptop";
 import AddPhone from "./screens/admin/phone/add";
 import EditPhone from "./screens/admin/phone/edit";
@@ -26,6 +29,9 @@ function App() {
         <Route path="phone-edit/:slug" element={<EditPhone />} />
         <Route path="phone-add" element={<AddPhone />} />
         <Route path="laptop" element={<Laptop />} />
+        <Route path="category" element={<Category />} />
+        <Route path="category-add" element={<CategoryAdd />} />
+        <Route path="category-edit/:slug" element={<CategoryEdit />} />
         <Route path="tablet" element={<Tablet />} />
         <Route path="sound" element={<Sound />} />
         <Route path="user" element={<User />} />

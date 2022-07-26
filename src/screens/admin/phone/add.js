@@ -11,12 +11,10 @@ import {
   Typography,
   Upload,
 } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import categoryAPI from "../../../api/category";
 import { uploadIMG } from "../../../api/image";
-import productAPI from "../../../api/product";
 import "../../../common/firebase";
 import { getCategories } from "../../../features/categorySlide";
 import { createProduct } from "../../../features/productSlide";
