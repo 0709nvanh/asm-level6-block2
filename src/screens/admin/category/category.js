@@ -1,13 +1,14 @@
-import { FormOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Col, message, Row, Switch, Table, Typography } from "antd";
-import React, { useEffect } from "react";
+import { FormOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import { Col, Input, message, Row, Switch, Table, Typography } from "antd";
+import React, { useEffect, useTransition } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import categoryAPI from "../../../api/category";
-import { getCategories } from "../../../features/categorySlide";
+import { getCategories, searchCategories } from "../../../features/categorySlide";
 const { Title } = Typography;
 const Category = (props) => {
   const dispatch = useDispatch();
+  const [isPending, startTransition] = useTransition();
   const { categories } = useSelector((state) => state.categories);
   const getCategory = async () => {
     dispatch(getCategories());
@@ -66,11 +67,25 @@ const Category = (props) => {
       ),
     },
   ];
+  const onHandelSearch = (e) => {
+    const keySearch = e.target.value;
+    startTransition(() => {
+      dispatch(searchCategories(keySearch));
+    });
+  };
   return (
     <>
       <Row className="align-items-center justify-content-between mb-2">
         <Col span={4}>
           <Title level={3}>Danh mục</Title>
+        </Col>
+        <Col span={12}>
+          <Input
+            onKeyUp={onHandelSearch}
+            size="large"
+            placeholder="Tìm kiếm theo tên danh mục"
+            prefix={<SearchOutlined />}
+          />
         </Col>
         <Col span={2}>
           <Link to="/admin/category-add">

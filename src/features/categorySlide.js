@@ -9,6 +9,14 @@ export const getCategories = createAsyncThunk(
   }
 );
 
+export const searchCategories = createAsyncThunk(
+  "categories/searchCategories",
+  async (keySearch) => {
+    const { data } = await categoryAPI.searchCategory(keySearch);
+    return data;
+  }
+);
+
 export const readCategory = createAsyncThunk(
   "categories/readCategory",
   async (slug) => {
@@ -59,6 +67,17 @@ const categorySlice = createSlice({
       state.loading = true;
     });
     builder.addCase(getCategories.rejected, (state, action) => {
+      state.error = action.payload;
+    });
+
+    builder.addCase(searchCategories.fulfilled, (state, action) => {
+      state.loading = false;
+      state.categories = action.payload;
+    });
+    builder.addCase(searchCategories.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(searchCategories.rejected, (state, action) => {
       state.error = action.payload;
     });
 

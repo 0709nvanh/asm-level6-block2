@@ -5,11 +5,23 @@ import {
   SearchOutlined,
   FileSearchOutlined,
   SoundOutlined,
-  WindowsOutlined
+  WindowsOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu, Row, Col, Input, Image, Avatar } from "antd";
-import React from "react";
+import {
+  Breadcrumb,
+  Layout,
+  Menu,
+  Row,
+  Col,
+  Input,
+  Image,
+  Avatar,
+  Spin,
+} from "antd";
+import React, { useTransition } from "react";
+import { useDispatch } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
+import { searchProducts } from "../features/productSlide";
 const { Header, Content, Sider } = Layout;
 const dataMenu = [
   {
@@ -51,72 +63,73 @@ const items2 = dataMenu.map((data) => {
   };
 });
 
-const App = () => (
-  <Layout>
-    <Header className="header bg-header" >
-      <Row className="">
-        <Col span={4}>
-          <div className="">
-            <img
-              width={100}
-              src="https://logos-world.net/wp-content/uploads/2022/04/Gartic-Phone-Logo.png"
-              alt=""
-            />
-          </div>
-        </Col>
-        <Col span={12}>
-          <Input
-            size="large"
-            placeholder="Tìm kiếm theo từ khóa"
-            prefix={<SearchOutlined />}
-          />
-        </Col>
-        <Col span={4}></Col>
-        <Col span={4} className="align-items-center">
-          <Avatar
-            src={
-              <Image
-                src="https://joeschmoe.io/api/v1/random"
-                style={{ width: 32 }}
+const App = () => {
+  
+  
+  return (
+    <Layout>
+      <Header className="header bg-header">
+        <Row className="">
+          <Col span={4}>
+            <div className="">
+              <img
+                width={100}
+                src="https://logos-world.net/wp-content/uploads/2022/04/Gartic-Phone-Logo.png"
+                alt=""
               />
-            }
+            </div>
+          </Col>
+          <Col span={12}>
+            
+          </Col>
+          <Col span={4}></Col>
+          <Col span={4} className="align-items-center">
+            <Avatar
+              src={
+                <Image
+                  src="https://joeschmoe.io/api/v1/random"
+                  style={{ width: 32 }}
+                />
+              }
+            />
+            <span className="m-0 ms-2 text-white">
+              Xin chào, Nguyễn Vân Anh
+            </span>
+          </Col>
+        </Row>
+      </Header>
+      <Layout style={{ marginTop: "80px" }}>
+        <Sider width={300} className="site-layout-background">
+          <Menu
+            mode="inline"
+            defaultSelectedKeys={["1"]}
+            defaultOpenKeys={["sub1"]}
+            style={{
+              height: "100%",
+              borderRight: 0,
+            }}
+            items={items2}
           />
-          <span className="m-0 ms-2 text-white">Xin chào, Nguyễn Vân Anh</span>
-        </Col>
-      </Row>
-    </Header>
-    <Layout style={{marginTop: '80px'}}>
-      <Sider width={300} className="site-layout-background">
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
+        </Sider>
+        <Layout
           style={{
-            height: "100%",
-            borderRight: 0,
-          }}
-          items={items2}
-        />
-      </Sider>
-      <Layout
-        style={{
-          padding: "20px",
-        }}
-      >
-        
-        <Content
-          className="site-layout-background"
-          style={{
-            padding: 20,
-            margin: 0,
-            minHeight: 280,
+            padding: "20px",
           }}
         >
-          <Outlet />
-        </Content>
+          <Content
+            className="site-layout-background"
+            style={{
+              padding: 20,
+              margin: 0,
+              minHeight: 280,
+            }}
+          >
+            <Outlet />
+          </Content>
+        </Layout>
       </Layout>
     </Layout>
-  </Layout>
-);
+  );
+};
 
 export default App;

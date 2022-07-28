@@ -1,15 +1,29 @@
-import { FormOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Col, message, Row, Select, Switch, Table, Typography } from "antd";
-import React, { useEffect } from "react";
+import {
+  FormOutlined,
+  PlusCircleOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import {
+  Col,
+  Input,
+  message,
+  Row,
+  Select,
+  Switch,
+  Table,
+  Typography,
+} from "antd";
+import React, { useEffect, useTransition } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import productAPI from "../../../api/product";
 import { formatprice } from "../../../common/formatprice";
 import { getCategories } from "../../../features/categorySlide";
-import { getProducts } from "../../../features/productSlide";
+import { getProducts, searchProducts } from "../../../features/productSlide";
 const { Title } = Typography;
 const { Option } = Select;
 const Phone = (props) => {
+  const [isPending, startTransition] = useTransition();
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.categories);
   const { products } = useSelector((state) => state.products);
@@ -43,7 +57,7 @@ const Phone = (props) => {
         }
       })
       .catch((err) => {
-        if(err?.response?.data?.message){
+        if (err?.response?.data?.message) {
           message.error(err?.response?.data?.message);
         }
       });
@@ -113,11 +127,26 @@ const Phone = (props) => {
       ),
     },
   ];
+
+  const onHandelSearch = (e) => {
+    const keySearch = e.target.value;
+    startTransition(() => {
+      dispatch(searchProducts(keySearch));
+    });
+  };
   return (
     <>
       <Row className="align-items-center justify-content-between mb-2">
         <Col span={4}>
           <Title level={3}>Điện thoại</Title>
+        </Col>
+        <Col span={12}>
+          <Input
+            onKeyUp={onHandelSearch}
+            size="large"
+            placeholder="Tìm kiếm theo tên sản phẩm"
+            prefix={<SearchOutlined />}
+          />
         </Col>
         <Col span={2}>
           <Link to="/admin/phone-add">

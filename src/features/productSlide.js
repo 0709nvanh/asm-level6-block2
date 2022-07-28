@@ -9,6 +9,14 @@ export const getProducts = createAsyncThunk(
   }
 );
 
+export const searchProducts = createAsyncThunk(
+  "product/searchProducts",
+  async (keySearch) => {
+    const { data } = await productAPI.searchProduct(keySearch);
+    return data;
+  }
+);
+
 export const readProduct = createAsyncThunk(
   "product/readProduct",
   async (slug) => {
@@ -50,6 +58,17 @@ const productSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(getProducts.rejected, (state, action) => {
+      state.error = action.payload;
+    });
+
+    builder.addCase(searchProducts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.products = action.payload;
+    });
+    builder.addCase(searchProducts.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(searchProducts.rejected, (state, action) => {
       state.error = action.payload;
     });
 

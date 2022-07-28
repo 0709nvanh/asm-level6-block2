@@ -1,11 +1,17 @@
-import { Col, message, Row, Select, Switch, Table, Typography } from "antd";
-import React, { useEffect } from "react";
+import { SearchOutlined } from "@ant-design/icons";
+import { Col, Input, message, Row, Select, Switch, Table, Typography } from "antd";
+import React, { useEffect, useTransition } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getListUser, updateStatusUser } from "../../../features/userSlide";
+import {
+  getListUser,
+  searchUserSlide,
+  updateStatusUser
+} from "../../../features/userSlide";
 const { Title } = Typography;
 const { Option } = Select;
 const User = (props) => {
   const dispatch = useDispatch();
+  const [isPending, startTransition] = useTransition();
   const { users } = useSelector((state) => state.users);
   useEffect(() => {
     dispatch(getListUser());
@@ -21,7 +27,7 @@ const User = (props) => {
       };
       dispatch(updateStatusUser(data))
         .then((res) => {
-          if(res.payload){
+          if (res.payload) {
             message.success("Thay đổi trạng thái thành công");
             dispatch(getListUser());
           }
@@ -61,11 +67,26 @@ const User = (props) => {
       ),
     },
   ];
+
+  const onHandelSearch = (e) => {
+    const keySearch = e.target.value;
+    startTransition(() => {
+      dispatch(searchUserSlide(keySearch));
+    });
+  };
   return (
     <>
       <Row className="align-items-center justify-content-between mb-2">
         <Col span={4}>
           <Title level={3}>Tài khoản</Title>
+        </Col>
+        <Col span={12}>
+          <Input
+            onKeyUp={onHandelSearch}
+            size="large"
+            placeholder="Tìm kiếm theo email tài khoản"
+            prefix={<SearchOutlined />}
+          />
         </Col>
       </Row>
       <Table columns={columns} dataSource={users} />

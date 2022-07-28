@@ -14,6 +14,11 @@ const authAPI = {
     return axiosClient.get(url);
   },
 
+  searchUser(keySearch) {
+    const url = `search-user`;
+    return axiosClient.post(url, { keySearch });
+  },
+
   readUser(id){
     const url = `/users/${id}`;
     return axiosClient.get(url);

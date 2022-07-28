@@ -6,6 +6,11 @@ export const getListUser = createAsyncThunk("user/getListUser", async () => {
   return users;
 });
 
+export const searchUserSlide = createAsyncThunk("user/searchUserSlide", async (keySearch) => {
+  const { data: users } = await authAPI.searchUser(keySearch);
+  return users;
+});
+
 export const getUserById = createAsyncThunk("user/getUser", async (id) => {
   const { user } = await authAPI.readUser(id);
   return user;
@@ -43,6 +48,16 @@ const userSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(getListUser.rejected, (state, action) => {
+      state.error = action.payload;
+    });
+    builder.addCase(searchUserSlide.fulfilled, (state, action) => {
+      state.loading = false;
+      state.users = action.payload;
+    });
+    builder.addCase(searchUserSlide.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(searchUserSlide.rejected, (state, action) => {
       state.error = action.payload;
     });
 
