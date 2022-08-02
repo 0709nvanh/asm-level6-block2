@@ -6,20 +6,26 @@ export const getListUser = createAsyncThunk("user/getListUser", async () => {
   return users;
 });
 
-export const searchUserSlide = createAsyncThunk("user/searchUserSlide", async (keySearch) => {
-  const { data: users } = await authAPI.searchUser(keySearch);
-  return users;
-});
+export const searchUserSlide = createAsyncThunk(
+  "user/searchUserSlide",
+  async (keySearch) => {
+    const { data: users } = await authAPI.searchUser(keySearch);
+    return users;
+  }
+);
 
 export const getUserById = createAsyncThunk("user/getUser", async (id) => {
   const { user } = await authAPI.readUser(id);
   return user;
 });
 
-export const updateStatusUser = createAsyncThunk("user/updateStatusUser", async (status) => {
-  const { data } = await authAPI.updateStatusUser(status);
-  return data;
-})
+export const updateStatusUser = createAsyncThunk(
+  "user/updateStatusUser",
+  async (status) => {
+    const { data } = await authAPI.updateStatusUser(status);
+    return data;
+  }
+);
 
 export const loginUser = createAsyncThunk("user/login", async (user) => {
   const { data } = await authAPI.login(user);
@@ -37,7 +43,12 @@ const userSlice = createSlice({
     users: [],
     infoUser: {},
     loading: false,
-    error: {},
+    error: {}
+  },
+  reducers: {
+    logoutUser: (state, action) => {
+      state.infoUser = {};
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(getListUser.fulfilled, (state, action) => {
@@ -101,6 +112,8 @@ const userSlice = createSlice({
     builder.addCase(updateStatusUser.rejected, (state, action) => {
       state.error = action.payload;
     });
-  },
+  }
 });
+
+export const { logoutUser } = userSlice.actions;
 export default userSlice.reducer;

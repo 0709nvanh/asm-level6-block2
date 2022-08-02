@@ -5,7 +5,7 @@ import {
   SearchOutlined,
   FileSearchOutlined,
   SoundOutlined,
-  WindowsOutlined,
+  WindowsOutlined
 } from "@ant-design/icons";
 import {
   Breadcrumb,
@@ -17,84 +17,121 @@ import {
   Image,
   Avatar,
   Spin,
+  Dropdown
 } from "antd";
-import React, { useTransition } from "react";
-import { useDispatch } from "react-redux";
-import { Link, Outlet } from "react-router-dom";
+import React, { useEffect, useTransition } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { searchProducts } from "../features/productSlide";
+import { logoutUser } from "../features/userSlide";
 const { Header, Content, Sider } = Layout;
 const dataMenu = [
   {
     title: "User",
     icon: UserOutlined,
-    path: "user",
+    path: "user"
   },
   {
     title: "Danh mục",
     icon: WindowsOutlined,
-    path: "category",
+    path: "category"
   },
   {
     title: "Điện thoại",
     icon: PhoneOutlined,
-    path: "phone",
+    path: "phone"
   },
   {
     title: "Laptop",
     icon: LaptopOutlined,
-    path: "laptop",
+    path: "laptop"
   },
   {
     title: "Máy tính bảng",
     icon: FileSearchOutlined,
-    path: "tablet",
+    path: "tablet"
   },
   {
     title: "Âm thanh",
     icon: SoundOutlined,
-    path: "sound",
-  },
+    path: "sound"
+  }
 ];
 const items2 = dataMenu.map((data) => {
   return {
     key: `${data.title}`,
     icon: React.createElement(data.icon),
-    label: <Link to={data.path}>{data.title}</Link>,
+    label: <Link to={data.path}>{data.title}</Link>
   };
 });
 
-const App = () => {
-  
-  
+const Admin = () => {
+  const { infoUser } = useSelector((state) => state.users);
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (infoUser && infoUser?.role === 0) {
+      navigate("/");
+    } else if (!infoUser || !infoUser.email) {
+      navigate("/login");
+    }
+  }, [infoUser]);
+  const onLogout = () => {
+    dispatch(logoutUser())
+  }
+  const menu = (
+    <Menu
+      items={[
+        {
+          key: '1',
+          label: (
+            <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+              Thông tin tài khoản
+            </a>
+          ),
+        },
+        {
+          key: '2',
+          label: (
+            <a onClick={onLogout}>
+              Đăng xuất
+            </a>
+          ),
+        },
+      ]}
+    />
+  );
   return (
     <Layout>
       <Header className="header bg-header">
         <Row className="">
           <Col span={4}>
-            <div className="">
+            <Link to="/" className="">
               <img
                 width={100}
                 src="https://logos-world.net/wp-content/uploads/2022/04/Gartic-Phone-Logo.png"
                 alt=""
               />
-            </div>
+            </Link>
           </Col>
-          <Col span={12}>
-            
-          </Col>
+          <Col span={12}></Col>
           <Col span={4}></Col>
           <Col span={4} className="align-items-center">
-            <Avatar
-              src={
-                <Image
-                  src="https://joeschmoe.io/api/v1/random"
-                  style={{ width: 32 }}
+            <Dropdown overlay={menu} placement="bottom" arrow>
+              <div className="d-flex align-items-center">
+                <Avatar
+                  src={
+                    <Image
+                      src="https://joeschmoe.io/api/v1/random"
+                      style={{ width: 32 }}
+                    />
+                  }
                 />
-              }
-            />
-            <span className="m-0 ms-2 text-white">
-              Xin chào, Nguyễn Vân Anh
-            </span>
+                <span className="m-0 ms-2 text-white">
+                  Xin chào, {infoUser.username}
+                </span>
+              </div>
+            </Dropdown>
           </Col>
         </Row>
       </Header>
@@ -106,14 +143,14 @@ const App = () => {
             defaultOpenKeys={["sub1"]}
             style={{
               height: "100%",
-              borderRight: 0,
+              borderRight: 0
             }}
             items={items2}
           />
         </Sider>
         <Layout
           style={{
-            padding: "20px",
+            padding: "20px"
           }}
         >
           <Content
@@ -121,7 +158,7 @@ const App = () => {
             style={{
               padding: 20,
               margin: 0,
-              minHeight: 280,
+              minHeight: 280
             }}
           >
             <Outlet />
@@ -132,4 +169,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Admin;

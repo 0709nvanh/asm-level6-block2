@@ -1,0 +1,48 @@
+.image-bottom{
+    width: 80px;
+    height: 80px;
+
+}
+
+.wrapper-image{
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.img-bottom-wrapper{
+    margin-top: 10px;
+}
+
+
+.image-border{
+    padding: 20px;
+    border-radius: 12px;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.image-border2{
+    padding: 5px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    display: block;
+}
+
+.iconCart{
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    border: 1px solid rgba(253, 0, 0, 0.1);
+    transition: background-color linear 0.35s;
+}
+.iconCart:hover{
+    background-color: rgb(110, 177, 236);
+    cursor: pointer;
+}
+
+.wrapper-desc {
+    background-color: #F2F2F2;
+    padding: 20px;
+}

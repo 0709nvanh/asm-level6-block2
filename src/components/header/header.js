@@ -6,28 +6,54 @@ import {
   EnvironmentOutlined,
   ShoppingOutlined,
   CarOutlined,
-  UserOutlined,
+  UserOutlined
 } from "@ant-design/icons";
-import { Button, Col, Input, message, Row, Typography } from "antd";
+import { Button, Col, Dropdown, Input, Menu, message, Row, Typography } from "antd";
 import "./header.css";
 import { Link, useNavigate } from "react-router-dom";
-import { getListUser } from "../../features/userSlide";
+import { getListUser, logoutUser } from "../../features/userSlide";
 const Header = (props) => {
   const { infoUser } = useSelector((state) => state.users);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    if(infoUser?._id){
-      dispatch(getListUser)
-    }else{
-      navigate("/login")
+    if (infoUser?._id) {
+      dispatch(getListUser);
+    } else {
+      navigate("/login");
     }
-    if(infoUser && infoUser.status === false){
-      message.error("Tài khoản của bạn bị mất hết quyền truy cập, vui lòng đăng nhập lại")
-      navigate('/login')
+    if (infoUser && infoUser.status === false) {
+      message.error(
+        "Tài khoản của bạn bị mất hết quyền truy cập, vui lòng đăng nhập lại"
+      );
+      navigate("/login");
     }
-  }, [infoUser?._id])
-  
+  }, [infoUser?._id]);
+  const onLogout = () => {
+    dispatch(logoutUser())
+  }
+  const menu = (
+    <Menu
+      items={[
+        {
+          key: '1',
+          label: (
+            <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+              Thông tin tài khoản
+            </a>
+          ),
+        },
+        {
+          key: '2',
+          label: (
+            <a onClick={onLogout}>
+              Đăng xuất
+            </a>
+          ),
+        },
+      ]}
+    />
+  );
   return (
     <div className="container-fluid header">
       <Row className="container align-items-center">
@@ -63,11 +89,25 @@ const Header = (props) => {
               </Typography.Title>
             </Col>
             {infoUser?.username ? (
-              <Col span={12} className="d-flex align-items-center">
-                <UserOutlined style={{fontSize: '20px'}} className="site-form-item-icon text-white" />
-                <Typography.Title level={4} style={{ color: "white", marginLeft: 10, marginBottom: 0 }}>
-                  Xin chào, {infoUser?.username}
-                </Typography.Title>
+              <Col span={12}>
+                <Dropdown overlay={menu} placement="bottom" arrow>
+                  <div className="d-flex align-items-center">
+                    <UserOutlined
+                      style={{ fontSize: "20px" }}
+                      className="site-form-item-icon text-white"
+                    />
+                    <Typography.Title
+                      level={4}
+                      style={{
+                        color: "white",
+                        marginLeft: 10,
+                        marginBottom: 0
+                      }}
+                    >
+                      Xin chào, {infoUser?.username}
+                    </Typography.Title>
+                  </div>
+                </Dropdown>
               </Col>
             ) : (
               <Col span={12} className="d-flex">

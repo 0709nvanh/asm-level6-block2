@@ -121,3 +121,10 @@
 .text-white{
   color: white;
 }
+
+.d-block{
+  display: block;
+}
+.text-red{
+  color: red !important;
+}
