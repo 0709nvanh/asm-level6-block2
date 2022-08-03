@@ -14,6 +14,7 @@ import Tablet from "./screens/admin/tablet/tablet";
 import User from "./screens/admin/user/user";
 import Login from "./screens/website/auth/login";
 import Signup from "./screens/website/auth/signup";
+import CartPage from "./screens/website/cart/cartPage";
 import CategoryPage from "./screens/website/category/categoryPage";
 import HomePage from "./screens/website/home/homePage";
 import ProductPage from "./screens/website/product/ProductPage";
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" element={<HomePage />}/>
         <Route path="/:slug" element={<CategoryPage />}/>
         <Route path="/:cate/:slug" element={<ProductPage />}/>
+        <Route path="cart" element={<CartPage />} />
       </Route>
       <Route path="login" element={<Login />} />
       <Route path="signup" element={<Signup />} />

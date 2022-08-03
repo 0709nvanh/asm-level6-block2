@@ -105,6 +105,9 @@
 .justify-content-between{
   justify-content: space-between;
 }
+.ms-1{
+  margin-right: 10px !important;
+}
 
 .mb-1{
   margin-bottom: 10px;

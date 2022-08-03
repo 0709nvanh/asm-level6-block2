@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { readProduct } from "../../../features/productSlide";
 import { Button, Col, Row, Typography } from "antd";
@@ -18,6 +18,11 @@ const ProductPage = (props) => {
   const { slug } = useParams();
   const { product, products } = useSelector((state) => state.products);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const onShowCart = () => {
+    navigate("/cart");
+  };
   useEffect(() => {
     dispatch(readProduct(slug));
   }, [slug]);
@@ -52,13 +57,15 @@ const ProductPage = (props) => {
           <Typography.Text className="mt-2 mb-2 d-block">
             Mô tả sản phẩm: {product?.shortDesc}
           </Typography.Text>
-          <Button style={{ width: "300px", height: "40px" }} type="primary">
-            Mua ngay
-          </Button>
+          <Link to="/cart">
+            <Button style={{ width: "300px", height: "40px" }} type="primary">
+              Mua ngay
+            </Button>
+          </Link>
           <div className="d-flex align-items-center mt-2">
-            <div className="iconCart">
+            <Link to="/cart" className="iconCart">
               <ShoppingCartOutlined style={{ color: "red" }} />
-            </div>
+            </Link>
             <Button
               style={{ width: "250px", height: "40px", marginLeft: "10px" }}
               type="primary"

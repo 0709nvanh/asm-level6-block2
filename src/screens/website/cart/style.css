@@ -1,0 +1,33 @@
+.cart-wrapper{
+    max-width: 80%;
+    padding: 30px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 1px 4px 5px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.cart-right{
+
+}
+
+.icon-remove{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.btn-over-cart{
+    text-align: center;
+    height: 30px;
+    width: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0 4px;
+    line-height: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s linear;
+}
+.btn-over-cart:hover{
+    background-color: #1890ff;
+    color: white;
+}
