@@ -87,7 +87,7 @@ const Phone = (props) => {
       title: "Danh mục",
       dataIndex: "category",
       key: "category",
-      render: (category) => <a>{category.name}</a>,
+      render: (category) => <a>{category?.name}</a>,
     },
     {
       title: "Giá cũ",

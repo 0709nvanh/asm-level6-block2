@@ -21,6 +21,7 @@
   box-sizing: border-box;
 }
 .box-search-wrapper {
+  display: none;
   background-color: white;
   position: absolute;
   box-shadow: 1px 4px 4px rgba(0, 0, 0, 0.1);
@@ -64,4 +65,20 @@
     padding: 5px 0;
     text-align: center;
     display: block;
+}
+
+.showFormSearch:hover .box-search-wrapper{
+  display: block;
+}
+
+.text-total-cart{
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: white;
+  text-align: center;
+  line-height: 20px;
+  position: absolute;
+  left: 10px;
+  top: -10px;
 }

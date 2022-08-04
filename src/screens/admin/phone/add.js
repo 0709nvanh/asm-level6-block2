@@ -11,7 +11,7 @@ import {
   Typography,
   Upload,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { uploadIMG } from "../../../api/image";
@@ -44,18 +44,24 @@ const AddPhone = (props) => {
   }, []);
 
   const onFinish = async (values) => {
-    const dataImg = await getBase64(imageFile[0].originFileObj);
-    const { data: img } = await uploadIMG(dataImg);
-    if (img && img.url) {
-      values.image = img.url;
-      dispatch(createProduct(values)).then((res) => {
-        if (res.payload) {
-          navigate("/admin/phone");
-          message.success("Thêm mới sản phẩm thành công");
-        } else {
-          message.error("Thêm mới sản phẩm thất bại");
-        }
-      });
+    if (Number(values.priceOld) < Number(values.priceNew)) {
+      message.error(
+        "Giá khuyến mãi không được lớn hơn giá gốc. Vui lòng nhập lại"
+      );
+    } else {
+      const dataImg = await getBase64(imageFile[0].originFileObj);
+      const { data: img } = await uploadIMG(dataImg);
+      if (img && img.url) {
+        values.image = img.url;
+        dispatch(createProduct(values)).then((res) => {
+          if (res.payload) {
+            navigate("/admin/phone");
+            message.success("Thêm mới sản phẩm thành công");
+          } else {
+            message.error("Thêm mới sản phẩm thất bại");
+          }
+        });
+      }
     }
   };
 
@@ -115,7 +121,7 @@ const AddPhone = (props) => {
                 },
               ]}
             >
-              <InputNumber />
+              <InputNumber min={1} />
             </Form.Item>
             <Form.Item
               label="Giá khuyến mãi"
@@ -127,7 +133,7 @@ const AddPhone = (props) => {
                 },
               ]}
             >
-              <InputNumber />
+              <InputNumber min={1} />
             </Form.Item>
             <Form.Item
               label="Danh mục sản phẩm"

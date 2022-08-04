@@ -17,7 +17,8 @@ import {
   Image,
   Avatar,
   Spin,
-  Dropdown
+  Dropdown,
+  Typography
 } from "antd";
 import React, { useEffect, useTransition } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -103,7 +104,7 @@ const Admin = () => {
   );
   return (
     <Layout>
-      <Header className="header bg-header">
+      <Header style={{backgroundColor: '#00B0D7'}} className="header bg-header">
         <Row className="">
           <Col span={4}>
             <Link to="/" className="">
@@ -115,8 +116,8 @@ const Admin = () => {
             </Link>
           </Col>
           <Col span={12}></Col>
-          <Col span={4}></Col>
-          <Col span={4} className="align-items-center">
+          <Col span={2}></Col>
+          <Col span={6} className="align-items-center">
             <Dropdown overlay={menu} placement="bottom" arrow>
               <div className="d-flex align-items-center">
                 <Avatar
@@ -127,9 +128,9 @@ const Admin = () => {
                     />
                   }
                 />
-                <span className="m-0 ms-2 text-white">
+                <p className="m-0 ms-2 text-white">
                   Xin chào, {infoUser?.email}
-                </span>
+                </p>
               </div>
             </Dropdown>
           </Col>

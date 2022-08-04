@@ -46,13 +46,29 @@ const EditPhone = (props) => {
   }, [slug]);
 
   const onFinish = async (values) => {
-    let dataimgAll = null;
-    if (imageFile.length > 0) {
-      dataimgAll = imageFile;
-      const dataImg = await getBase64(dataimgAll[0].originFileObj);
-      const { data: img } = await uploadIMG(dataImg);
-      if (img && img.url) {
-        values.image = img.url;
+    if (Number(values.priceOld) < Number(values.priceNew)) {
+      message.error(
+        "Giá khuyến mãi không được lớn hơn giá gốc. Vui lòng nhập lại"
+      );
+    } else {
+      let dataimgAll = null;
+      if (imageFile.length > 0) {
+        dataimgAll = imageFile;
+        const dataImg = await getBase64(dataimgAll[0].originFileObj);
+        const { data: img } = await uploadIMG(dataImg);
+        if (img && img.url) {
+          values.image = img.url;
+          values.slug = slug;
+          dispatch(updateProduct(values)).then((res) => {
+            if (res.payload) {
+              navigate("/admin/phone");
+              message.success("Cập nhật thành công");
+            } else {
+              message.error("Cập nhật thất bại");
+            }
+          });
+        }
+      } else {
         values.slug = slug;
         dispatch(updateProduct(values)).then((res) => {
           if (res.payload) {
@@ -63,16 +79,6 @@ const EditPhone = (props) => {
           }
         });
       }
-    } else {
-      values.slug = slug;
-      dispatch(updateProduct(values)).then((res) => {
-        if (res.payload) {
-          navigate("/admin/phone");
-          message.success("Cập nhật thành công");
-        } else {
-          message.error("Cập nhật thất bại");
-        }
-      });
     }
   };
 
@@ -135,7 +141,7 @@ const EditPhone = (props) => {
                     },
                   ]}
                 >
-                  <InputNumber value={product?.priceOld} />
+                  <InputNumber min={1} value={product?.priceOld} />
                 </Form.Item>
                 <Form.Item
                   label="Giá khuyến mãi"
@@ -147,7 +153,7 @@ const EditPhone = (props) => {
                     },
                   ]}
                 >
-                  <InputNumber value={product?.priceNew} />
+                  <InputNumber min={1} value={product?.priceNew} />
                 </Form.Item>
                 <Form.Item
                   label="Danh mục sản phẩm"

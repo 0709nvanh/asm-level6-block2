@@ -1,12 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { readProduct } from "../../../features/productSlide";
-import { Button, Col, Row, Typography } from "antd";
+import { Button, Col, InputNumber, message, Row, Typography } from "antd";
 import ProductImage from "./productImage";
 import { formatprice } from "../../../common/formatprice";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  ShoppingCartOutlined,
+  MinusOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import ProductComponent from "../../../components/product/productComponent";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper";
@@ -14,15 +18,15 @@ import { Pagination, Navigation } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { addCart } from "../../../features/cartSlide";
 const ProductPage = (props) => {
   const { slug } = useParams();
   const { product, products } = useSelector((state) => state.products);
+  const inputRef = useRef(null)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onShowCart = () => {
-    navigate("/cart");
-  };
+  
   useEffect(() => {
     dispatch(readProduct(slug));
   }, [slug]);
@@ -30,6 +34,27 @@ const ProductPage = (props) => {
     products &&
     products.length > 0 &&
     products.filter((item) => item.slug !== slug);
+
+  const onAddCart = () => {
+    const cart = {
+      quantity: Number(inputRef.current.value),
+      ...product
+    };
+    dispatch(addCart(cart))
+    message.success('Thêm giỏ hàng thành công')
+  };
+
+  const onAddCartNew = () => {
+    const cart = {
+      quantity: Number(inputRef.current.value),
+      ...product
+    };
+    dispatch(addCart(cart))
+    message.success('Thêm giỏ hàng thành công')
+    navigate('/cart')
+  }
+
+
   return (
     <div className="container">
       <Typography.Title level={3}>{product?.title}</Typography.Title>
@@ -57,8 +82,18 @@ const ProductPage = (props) => {
           <Typography.Text className="mt-2 mb-2 d-block">
             Mô tả sản phẩm: {product?.shortDesc}
           </Typography.Text>
+          <div className="d-flex align-items-center mt-2 mb-2">
+            <Typography.Title level={5} className="d-block m-0 me-2">
+              Chọn số lượng
+            </Typography.Title>
+            <div className="d-flex align-items-center">
+              
+              <InputNumber ref={inputRef} min={1} defaultValue={1} max={10} />
+             
+            </div>
+          </div>
           <Link to="/cart">
-            <Button style={{ width: "300px", height: "40px" }} type="primary">
+            <Button onClick={onAddCartNew} style={{ width: "300px", height: "40px" }} type="primary">
               Mua ngay
             </Button>
           </Link>
@@ -67,6 +102,7 @@ const ProductPage = (props) => {
               <ShoppingCartOutlined style={{ color: "red" }} />
             </Link>
             <Button
+              onClick={onAddCart}
               style={{ width: "250px", height: "40px", marginLeft: "10px" }}
               type="primary"
             >
@@ -80,21 +116,21 @@ const ProductPage = (props) => {
       </Typography.Title>
       <Swiper
         pagination={{
-          type: "progressbar"
+          type: "progressbar",
         }}
         breakpoints={{
           320: {
             slidesPerView: 2,
-            spaceBetween: 10
+            spaceBetween: 10,
           },
           768: {
             slidesPerView: 4,
-            spaceBetween: 10
+            spaceBetween: 10,
           },
           1024: {
             slidesPerView: 4,
-            spaceBetween: 10
-          }
+            spaceBetween: 10,
+          },
         }}
         navigation={true}
         modules={[Pagination, Navigation]}
