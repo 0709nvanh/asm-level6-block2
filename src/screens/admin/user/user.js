@@ -1,5 +1,14 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Col, Input, message, Row, Select, Switch, Table, Typography } from "antd";
+import {
+  Col,
+  Input,
+  message,
+  Row,
+  Select,
+  Switch,
+  Table,
+  Typography
+} from "antd";
 import React, { useEffect, useTransition } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -23,7 +32,7 @@ const User = (props) => {
     ) {
       const data = {
         status: !values.status,
-        _id: values._id,
+        _id: values._id
       };
       dispatch(updateStatusUser(data))
         .then((res) => {
@@ -42,18 +51,18 @@ const User = (props) => {
       title: "STT",
       dataIndex: "_id",
       key: "_id",
-      render: (text, data, number) => number + 1,
+      render: (text, data, number) => number + 1
     },
     {
-      title: "Tên tài khoản",
-      dataIndex: "username",
-      key: "username",
-      render: (text) => <a>{text}</a>,
+      title: "Số điện thoại",
+      dataIndex: "phone",
+      key: "phone",
+      render: (text) => <a>{text}</a>
     },
     {
       title: "Email",
       dataIndex: "email",
-      key: "email",
+      key: "email"
     },
 
     {
@@ -62,10 +71,27 @@ const User = (props) => {
       key: "status",
       render: (item, data) => (
         <>
-          <Switch checked={item} onChange={() => onChange(data)} />
+          <Switch
+            disabled={data.role === 1}
+            checked={item}
+            onChange={() => onChange(data)}
+          />
         </>
-      ),
+      )
     },
+
+    {
+      title: "Chức vụ",
+      dataIndex: "valueKey",
+      key: "valueKey",
+      render: (item, data) => (
+        <>
+          <Typography.Text>
+            {data.role === 1 ? "Quản trị viên" : "Member"}
+          </Typography.Text>
+        </>
+      )
+    }
   ];
 
   const onHandelSearch = (e) => {

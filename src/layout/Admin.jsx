@@ -128,7 +128,7 @@ const Admin = () => {
                   }
                 />
                 <span className="m-0 ms-2 text-white">
-                  Xin chào, {infoUser.username}
+                  Xin chào, {infoUser?.email}
                 </span>
               </div>
             </Dropdown>

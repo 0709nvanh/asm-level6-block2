@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useTransition } from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,14 +8,25 @@ import {
   CarOutlined,
   UserOutlined
 } from "@ant-design/icons";
-import { Button, Col, Dropdown, Input, Menu, message, Row, Typography } from "antd";
+import {
+  Button,
+  Col,
+  Dropdown,
+  Input,
+  Menu,
+  message,
+  Row,
+  Typography
+} from "antd";
 import "./header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { getListUser, logoutUser } from "../../features/userSlide";
+import { searchProducts } from "../../features/productSlide";
 const Header = (props) => {
   const { infoUser } = useSelector((state) => state.users);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isPending, startTransition] = useTransition();
   useEffect(() => {
     if (infoUser?._id) {
       dispatch(getListUser);
@@ -24,51 +35,89 @@ const Header = (props) => {
     }
     if (infoUser && infoUser.status === false) {
       message.error(
-        "Tài khoản của bạn bị mất hết quyền truy cập, vui lòng đăng nhập lại"
+        "Tài khoản của bạn bị mất quyền truy cập, vui lòng đăng nhập lại"
       );
       navigate("/login");
     }
   }, [infoUser?._id]);
   const onLogout = () => {
-    dispatch(logoutUser())
-  }
+    dispatch(logoutUser());
+  };
+
+  const menu2 = (
+    <Menu
+      items={[
+        {
+          key: "1",
+          label: (
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.antgroup.com"
+            >
+              Thông tin tài khoản
+            </a>
+          )
+        },
+        {
+          key: "2",
+          label: <Link to="/admin">Truy cập quản trị</Link>
+        },
+        {
+          key: "3",
+          label: <a onClick={onLogout}>Đăng xuất</a>
+        }
+      ]}
+    />
+  );
   const menu = (
     <Menu
       items={[
         {
-          key: '1',
+          key: "1",
           label: (
-            <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.antgroup.com"
+            >
               Thông tin tài khoản
             </a>
-          ),
+          )
         },
         {
-          key: '2',
-          label: (
-            <a onClick={onLogout}>
-              Đăng xuất
-            </a>
-          ),
-        },
+          key: "2",
+          label: <a onClick={onLogout}>Đăng xuất</a>
+        }
       ]}
     />
   );
+
+  const onHandelSearch = (e) => {
+    const keySearch = e.target.value;
+    startTransition(() => {
+      dispatch(searchProducts(keySearch));
+    });
+  };
   return (
     <div className="container-fluid header">
       <Row className="container align-items-center">
         <Col xs={4} sm={4} md={4} lg={4} xl={4}>
-          <div className="logo-header">
+          <Link to="/" className="logo-header">
             <img
               width={100}
               className="img"
               src="https://logos-world.net/wp-content/uploads/2022/04/Gartic-Phone-Logo.png"
               alt="Image"
             />
-          </div>
+          </Link>
         </Col>
         <Col xs={8} sm={8} md={8} lg={8} xl={8}>
-          <Input placeholder="Tìm kiếm" prefix={<SearchOutlined />} />
+          <Input
+            placeholder="Tìm kiếm"
+            onKeyUp={onHandelSearch}
+            prefix={<SearchOutlined />}
+          />
         </Col>
         <Col xs={12} sm={12} md={12} lg={12} xl={12} className="ps-2">
           <Row className="align-items-center">
@@ -88,9 +137,13 @@ const Header = (props) => {
                 Giỏ hàng
               </Typography.Title>
             </Col>
-            {infoUser?.username ? (
+            {infoUser?.email ? (
               <Col span={12}>
-                <Dropdown overlay={menu} placement="bottom" arrow>
+                <Dropdown
+                  overlay={infoUser?.role === 1 ? menu2 : menu}
+                  placement="bottom"
+                  arrow
+                >
                   <div className="d-flex align-items-center">
                     <UserOutlined
                       style={{ fontSize: "20px" }}
@@ -104,7 +157,7 @@ const Header = (props) => {
                         marginBottom: 0
                       }}
                     >
-                      Xin chào, {infoUser?.username}
+                      Xin chào, {infoUser?.email}
                     </Typography.Title>
                   </div>
                 </Dropdown>

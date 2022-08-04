@@ -131,3 +131,7 @@
 .text-red{
   color: red !important;
 }
+
+.p-3{
+  padding: 30px;
+}

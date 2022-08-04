@@ -1,18 +1,57 @@
-
 .login-form-forgot {
   float: right;
 }
 .login-form-button {
   width: 100%;
+  background: #ff424e;
+  border-radius: 4px;
 }
 .p-5 {
-    padding: 50px;
+  padding: 50px;
 }
 
 .m-5 {
-    /* margin: 5rem; */
+  /* margin: 5rem; */
 }
 
-.text-center{
-    text-align: center;
+.text-center {
+  text-align: center;
+}
+
+.bi-facebook {
+  color: blue;
+  cursor: pointer;
+}
+
+.icon-google {
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  line-height: 40px;
+  background-color: white;
+  box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 10px;
+}
+.justify-content-center {
+  justify-content: center;
+}
+
+
+.container-login{
+  width: 900px;
+  margin: 40px auto;
+  box-shadow: 1px 4px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.box-left{
+  background-color: #F8F8F8;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
 }

@@ -52,7 +52,7 @@ const ProductPage = (props) => {
             </Typography.Title>
           </div>
           <Typography.Text level={3}>
-            Danh mục sản phẩm: {product?.category.name}
+            Danh mục sản phẩm: {product?.category?.name}
           </Typography.Text>
           <Typography.Text className="mt-2 mb-2 d-block">
             Mô tả sản phẩm: {product?.shortDesc}
