@@ -16,14 +16,17 @@ import {
   Menu,
   message,
   Row,
+  Spin,
   Typography
 } from "antd";
 import "./header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { getListUser, logoutUser } from "../../features/userSlide";
-import { searchProducts } from "../../features/productSlide";
+import { searchProductsHeader } from "../../features/productSlide";
+import { formatprice } from "../../common/formatprice";
 const Header = (props) => {
   const { infoUser } = useSelector((state) => state.users);
+  const { productsHeader } = useSelector((state) => state.products);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isPending, startTransition] = useTransition();
@@ -96,7 +99,7 @@ const Header = (props) => {
   const onHandelSearch = (e) => {
     const keySearch = e.target.value;
     startTransition(() => {
-      dispatch(searchProducts(keySearch));
+      dispatch(searchProductsHeader(keySearch));
     });
   };
   return (
@@ -118,6 +121,54 @@ const Header = (props) => {
             onKeyUp={onHandelSearch}
             prefix={<SearchOutlined />}
           />
+          <div className='box-search-wrapper'>
+            <div className="box-search-result">
+              {productsHeader && productsHeader.length > 0 ? (
+                <>
+                  {productsHeader.map((product) => (
+                    <Link
+                      to={"/" + product.category.slug + "/" + product.slug}
+                      key={product._id}
+                      className="box-search-item"
+                    >
+                      <div className="box-search-image me-2">
+                        <img
+                          width={100}
+                          height={100}
+                          style={{ objectFit: "cover" }}
+                          src={product?.image}
+                        />
+                      </div>
+                      <div className="box-search-content">
+                        <Typography.Title className="m-0" level={5}>
+                          {product?.title}
+                        </Typography.Title>
+                        <div>
+                          Giá sản phẩm:
+                          <Typography.Text className="text-red m-0 ms-1 me-2">
+                            {formatprice(product?.priceNew)}
+                          </Typography.Text>
+                        </div>
+
+                        <Typography.Text className="m-0" level={5}>
+                          Danh mục : {product?.category?.name}
+                        </Typography.Text>
+                      </div>
+                    </Link>
+                  ))}
+                </>
+              ) : (
+                <div className="d-flex align-items-center text-center justify-content-center">
+                  <Typography.Text className="text-center mt-2 pt-2">
+                    Không tìm thấy kết quả
+                  </Typography.Text>
+                </div>
+              )}
+            </div>
+            <Link to="" className="link-search">
+                Xem tất cả
+            </Link>
+          </div>
         </Col>
         <Col xs={12} sm={12} md={12} lg={12} xl={12} className="ps-2">
           <Row className="align-items-center">

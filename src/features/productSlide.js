@@ -17,6 +17,14 @@ export const searchProducts = createAsyncThunk(
   }
 );
 
+export const searchProductsHeader = createAsyncThunk(
+  "product/searchProductsHeader",
+  async (keySearch) => {
+    const { data } = await productAPI.searchProduct(keySearch);
+    return data;
+  }
+);
+
 export const readProduct = createAsyncThunk(
   "product/readProduct",
   async (slug) => {
@@ -45,6 +53,7 @@ const productSlice = createSlice({
   name: "products",
   initialState: {
     products: [],
+    productsHeader: [],
     product: {},
     loading: false,
     error: {}
@@ -69,6 +78,17 @@ const productSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(searchProducts.rejected, (state, action) => {
+      state.error = action.payload;
+    });
+
+    builder.addCase(searchProductsHeader.fulfilled, (state, action) => {
+      state.loading = false;
+      state.productsHeader = action.payload;
+    });
+    builder.addCase(searchProductsHeader.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(searchProductsHeader.rejected, (state, action) => {
       state.error = action.payload;
     });
 
