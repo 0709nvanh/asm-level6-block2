@@ -1,29 +1,14 @@
 import {
-  LaptopOutlined,
-  UserOutlined,
-  PhoneOutlined,
-  SearchOutlined,
-  FileSearchOutlined,
-  SoundOutlined,
-  WindowsOutlined
+  LaptopOutlined, PhoneOutlined, UserOutlined, WindowsOutlined
 } from "@ant-design/icons";
 import {
-  Breadcrumb,
-  Layout,
+  Avatar, Col, Dropdown, Image, Layout,
   Menu,
-  Row,
-  Col,
-  Input,
-  Image,
-  Avatar,
-  Spin,
-  Dropdown,
-  Typography
+  Row
 } from "antd";
-import React, { useEffect, useTransition } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { searchProducts } from "../features/productSlide";
 import { logoutUser } from "../features/userSlide";
 const { Header, Content, Sider } = Layout;
 const dataMenu = [
@@ -38,25 +23,16 @@ const dataMenu = [
     path: "category"
   },
   {
-    title: "Điện thoại",
+    title: "Sản phẩm",
     icon: PhoneOutlined,
     path: "phone"
   },
   {
-    title: "Laptop",
+    title: "Giỏ hàng",
     icon: LaptopOutlined,
-    path: "laptop"
+    path: "cart"
   },
-  {
-    title: "Máy tính bảng",
-    icon: FileSearchOutlined,
-    path: "tablet"
-  },
-  {
-    title: "Âm thanh",
-    icon: SoundOutlined,
-    path: "sound"
-  }
+ 
 ];
 const items2 = dataMenu.map((data) => {
   return {

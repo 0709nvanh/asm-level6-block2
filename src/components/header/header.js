@@ -65,6 +65,10 @@ const Header = (props) => {
           ),
         },
         {
+          key: "5",
+          label: <Link to="/order">Đơn hàng</Link>,
+        },
+        {
           key: "2",
           label: <Link to="/admin">Truy cập quản trị</Link>,
         },
@@ -89,6 +93,10 @@ const Header = (props) => {
               Thông tin tài khoản
             </a>
           ),
+        },
+        {
+          key: "5",
+          label: <Link to="/order">Đơn hàng</Link>,
         },
         {
           key: "2",

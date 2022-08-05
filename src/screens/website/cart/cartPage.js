@@ -5,7 +5,7 @@ import {
   LeftOutlined,
   CloseOutlined,
   MinusOutlined,
-  PlusOutlined,
+  PlusOutlined
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import "./style.css";
@@ -16,7 +16,7 @@ import {
   decreateCart,
   increateCart,
   removeAllCart,
-  removeCart,
+  removeCart
 } from "../../../features/cartSlide";
 
 const CartPage = (props) => {
@@ -55,8 +55,8 @@ const CartPage = (props) => {
         userId: infoUser._id,
         listCart: carts.map((cart) => ({
           productId: cart._id,
-          quantity: cart.quantity,
-        })),
+          quantity: cart.quantity
+        }))
       };
       dispatch(addOrder(data)).then((res) => {
         if (res.payload) {
@@ -172,11 +172,18 @@ const CartPage = (props) => {
           Không có sản phẩm nào trong giỏ hàng
         </Typography.Title>
       )}
-      <Link to="/">
-        <Button style={{ width: "100%", height: "40px", marginTop: "10px" }}>
-          Chọn thêm sản phẩm khác
-        </Button>
-      </Link>
+      <div className="d-flex align-items-center justify-content-between">
+        <Link to="/">
+          <Button style={{ width: "100%", height: "40px", marginTop: "10px" }}>
+            Chọn thêm sản phẩm khác
+          </Button>
+        </Link>
+        <Link to="/order">
+          <Button style={{ width: "100%", height: "40px", marginTop: "10px" }}>
+            Đi tới lịch sự đơn hàng
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 };

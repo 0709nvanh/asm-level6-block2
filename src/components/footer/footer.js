@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Col, Row, Typography } from "antd";
-
+import { Button, Col, Row, Typography } from "antd";
+import './footer.css'
 const Footer = ( props) => {
   return (
-    <div className="container mt-2 pt-2">
+    <div className="container mt-2 pt-2 mb-2 pb-2">
       <Row>
         <Col span={6}>
           <Typography.Title level={4}>Tìm cửa hàng</Typography.Title>
@@ -16,6 +16,15 @@ const Footer = ( props) => {
             Gặp trực tiếp cửa hàng gần nhất (Zalo hoặc gọi điện)
           </Typography.Text>
           <Typography.Title level={4}>Phương thức thanh toán</Typography.Title>
+          <div className="me-2">
+            <img className="image-footer" src="https://image.cellphones.com.vn/x35/media/logo/payment/alepay-logo.png" />
+            <img className="image-footer" src="https://image.cellphones.com.vn/x35/media/logo/payment/zalopay-logo.png" />
+            <img className="image-footer" src="https://image.cellphones.com.vn/x35/media/logo/payment/vnpay-logo.png" />
+            <img className="image-footer" src="https://image.cellphones.com.vn/x35/media/logo/payment/moca-logo.png" />
+            <img className="image-footer" src="https://image.cellphones.com.vn/x35/media/logo/payment/onepay-logo.png" />
+            <img className="image-footer" src="https://image.cellphones.com.vn/x35/media/logo/payment/kredivo-logo.png" />
+            <img className="image-footer" src="https://image.cellphones.com.vn/x35/media/logo/payment/mpos-logo.png" />
+          </div>
         </Col>
         <Col span={6}>
           <Typography.Text className="d-block">
@@ -30,9 +39,14 @@ const Footer = ( props) => {
           <Typography.Title level={4}>
             Đối tác dịch vụ bảo hành
           </Typography.Title>
-          <Typography.Text className="d-block">
-            Điện Thoại - Máy tính
-          </Typography.Text>
+          <div className="btn-baohanh">
+            <p level={5} className="m-0 text-white">Đối tác dịch vụ bảo hành</p>
+            <p level={5} className="m-0 text-white">Điện thoại - máy tính</p>
+          </div>
+          <div className="btn-baohanh bthn-baohanh">
+            <p level={5} className="m-0 text-white">Trung tâm bảo hành ủy quyền</p>
+            <p level={5} className="m-0 text-white">Apple</p>
+          </div>
         </Col>
         <Col span={6}>
           <Typography.Text className="d-block">
