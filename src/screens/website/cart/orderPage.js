@@ -111,8 +111,8 @@ const OrderPage = (props) => {
                 <Typography.Title level={5}>
                   Đơn hàng ngày: {renderTime(order?.createdAt)}
                 </Typography.Title>
-                {order?.listCart &&
-                  order.listCart.map((cart) => (
+                {order && order?.listCart &&
+                  order.listCart?.map((cart) => (
                     <div className="mt-2 d-flex align-items-center justify-content-between">
                       <div className="order-item-image">
                         <img width={100} src={cart?.productId?.image} />
