@@ -30,7 +30,7 @@ const Signup = (props) => {
         navigate("/");
       }
     }else{
-      navigate("/login");
+    
     }
   }, [infoUser?.email]);
 
